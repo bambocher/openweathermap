@@ -20,8 +20,32 @@ var (
 	stationURL   = "http://api.openweathermap.org/data/2.5/station?id=%d"
 	forecastBase = "http://api.openweathermap.org/data/2.5/forecast/daily?%s=%s&mode=json&units=%s&cnt=%d"
 	dataPostURL  = "http://openweathermap.org/data/post"
-	//DataUnits    = map[string]string{"metric": "C", "imperial": "F", "internal": "K"}
-	DataUnits = map[string]string{"C": "metric", "F": "imperial", "K": "internal"}
+	DataUnits    = map[string]string{"C": "metric", "F": "imperial", "K": "internal"}
+	LangCodes    = map[string]string{
+		"EN":    "English",
+		"RU":    "Russian",
+		"IT":    "Italian",
+		"ES":    "Spanish",
+		"SP":    "Spanish",
+		"UK":    "Ukrainian",
+		"UA":    "Ukrainian",
+		"DE":    "German",
+		"PT":    "Portuguese",
+		"RO":    "Romanian",
+		"PL":    "Polish",
+		"FI":    "Finnish",
+		"NL":    "Dutch",
+		"FR":    "French",
+		"BG":    "Bulgarian",
+		"SV":    "Swedish",
+		"SE":    "Swedish",
+		"TR":    "Turkish",
+		"HR":    "Croatian",
+		"CA":    "Catalan",
+		"ZH_TW": "Chinese Traditional",
+		"ZH":    "Chinese Simplified",
+		"ZH_CN": "Chinese Simplified",
+	}
 )
 
 // Config will hold default settings to be passed into the
@@ -100,11 +124,11 @@ func ValidDataUnit(u string) bool {
 	return false
 }
 
-// ValidDataUnitSymbol makes sure the string passed in is an
-// acceptable data unit symbol.
-func ValidDataUnitSymbol(u string) bool {
-	for _, d := range DataUnits {
-		if u == d {
+// ValidLangValue makes sure the string passed in is an
+// acceptable lang code.
+func ValidLangCode(c string) bool {
+	for d := range LangCodes {
+		if c == d {
 			return true
 		}
 	}

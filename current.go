@@ -37,21 +37,23 @@ type CurrentWeatherData struct {
 	Name    string      `json:"name"`
 	Cod     int         `json:"cod"`
 	Unit    string
+	Lang    string
 }
 
 // NewCurrent returns a new WeatherData pointer with the supplied.
-func NewCurrent(unit string) (*CurrentWeatherData, error) {
+func NewCurrent(unit, lang string) (*CurrentWeatherData, error) {
 	unitChoice := strings.ToUpper(unit)
-	if ValidDataUnit(unitChoice) {
-		return &CurrentWeatherData{Unit: unitChoice}, nil
+	langChoice := strings.ToUpper(lang)
+	if ValidDataUnit(unitChoice) && ValidLangCode(langChoice) {
+		return &CurrentWeatherData{Unit: unitChoice, Lang: langChoice}, nil
 	}
-	return nil, errors.New("unit of measure not available")
+	return nil, errors.New("unit of measure or lang code not available")
 }
 
 // CurrentByName will provide the current weather with the provided
 // location name.
 func (w *CurrentWeatherData) CurrentByName(location string) error {
-	response, err := http.Get(fmt.Sprintf(fmt.Sprintf(baseURL, "q=%s&units=%s"), location, DataUnits[w.Unit]))
+	response, err := http.Get(fmt.Sprintf(fmt.Sprintf(baseURL, "q=%s&units=%s&lang=%s"), location, DataUnits[w.Unit], w.Lang))
 	if err != nil {
 		return err
 	}
@@ -65,7 +67,7 @@ func (w *CurrentWeatherData) CurrentByName(location string) error {
 // CurrentByCoordinates will provide the current weather with the
 // provided location coordinates.
 func (w *CurrentWeatherData) CurrentByCoordinates(location *Coordinates) error {
-	response, err := http.Get(fmt.Sprintf(fmt.Sprintf(baseURL, "lat=%f&lon=%f&units=%s"), location.Latitude, location.Longitude, w.Unit))
+	response, err := http.Get(fmt.Sprintf(fmt.Sprintf(baseURL, "lat=%f&lon=%f&units=%s&lang=%s"), location.Latitude, location.Longitude, w.Unit, w.Lang))
 	if err != nil {
 		return err
 	}
@@ -79,7 +81,7 @@ func (w *CurrentWeatherData) CurrentByCoordinates(location *Coordinates) error {
 // CurrentByID will provide the current weather with the
 // provided location ID.
 func (w *CurrentWeatherData) CurrentByID(id int) error {
-	response, err := http.Get(fmt.Sprintf(fmt.Sprintf(baseURL, "id=%d&units=%s"), id, w.Unit))
+	response, err := http.Get(fmt.Sprintf(fmt.Sprintf(baseURL, "id=%d&units=%s&lang=%s"), id, w.Unit, w.Lang))
 	if err != nil {
 		return err
 	}
